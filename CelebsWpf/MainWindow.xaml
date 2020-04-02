@@ -1,0 +1,38 @@
+﻿<Window x:Class="CelebsWpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CelebsWpf"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.ColumnSpan="2">
+            <Button x:Name="searchButton" Content="Search" Click="searchButton_Click" />
+        </StackPanel>
+
+        <Image x:Name="originalImage" Grid.Row="1" />
+        <Image x:Name="similarImage" Grid.Row="1" Grid.Column="1" />
+
+        <Border x:Name="resultGrid" Grid.Row="1" Grid.ColumnSpan="2" Padding="10" 
+                VerticalAlignment="Center" Background="Red" HorizontalAlignment="Center" Visibility="Collapsed" TextBlock.Foreground="White">
+            <StackPanel>
+                <TextBlock x:Name="nameTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" />
+                <TextBlock x:Name="resultTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="28" />
+            </StackPanel>
+        </Border>
+      
+
+        <Grid Background="White" Opacity="0.5" x:Name="busyGrid" Grid.ColumnSpan="2" Grid.RowSpan="2" Visibility="Collapsed" />
+    </Grid>
+</Window>
