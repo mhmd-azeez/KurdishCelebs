@@ -1,6 +1,7 @@
-﻿@page "{id}"
+﻿@page
 @model KurdishCelebs.WebApp.Pages.ResultModel
 @{
 }
 
-<img src="~/results/@(Model.Id).jpg" />
+<p>@Model.CelebName</p>
+<p>@Model.Confidence</p>
