@@ -14,6 +14,7 @@ using SixLabors.Fonts;
 using SixLabors.ImageSharp;
 using KurdishCelebs.WebApp.Helpers;
 using KurdishCelebs.WebApp.Services;
+using Microsoft.AspNetCore.Hosting;
 
 namespace KurdishCelebs.WebApp.Pages
 {
@@ -34,11 +35,15 @@ namespace KurdishCelebs.WebApp.Pages
     {
         private readonly ILogger<IndexModel> _logger;
         private readonly FacialRecognitionService _recognitionService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public IndexModel(ILogger<IndexModel> logger, FacialRecognitionService recognitionService)
+        public IndexModel(ILogger<IndexModel> logger,
+            FacialRecognitionService recognitionService,
+            IWebHostEnvironment webHostEnvironment)
         {
             _logger = logger;
             _recognitionService = recognitionService;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public void OnGet()
@@ -72,11 +77,13 @@ namespace KurdishCelebs.WebApp.Pages
             var contentFont = SystemFonts.CreateFont("Arial", 36, FontStyle.Regular);
             var watermarkFont = SystemFonts.CreateFont("Arial", 28, FontStyle.Bold);
 
-            var textOptions = new TextGraphicsOptions 
-            { 
-                HorizontalAlignment = HorizontalAlignment.Center, 
+            var textOptions = new TextGraphicsOptions
+            {
+                HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
             };
+
+            var id = Guid.NewGuid().ToString("N");
 
             using (var original = Image.Load(filePath))
             using (var match = Image.Load(top.ImagePath))
@@ -105,18 +112,21 @@ namespace KurdishCelebs.WebApp.Pages
                   .DrawText(textOptions, waterMark, watermarkFont, Brushes.Solid(Rgba32.White), Pens.Solid(Rgba32.Black, 1), watermarkCenter)
                 );
 
-                result.Save(memoryStream, new SixLabors.ImageSharp.Formats.Jpeg.JpegEncoder());
-            }
+                var resultFolder = Path.Combine(_webHostEnvironment.WebRootPath, PathHelper.ResultFolder);
+                var resultFilePath = Path.Combine(resultFolder, $"{id}.jpg");
+                if (Directory.Exists(resultFolder) == false)
+                {
+                    Directory.CreateDirectory(resultFolder);
+                }
 
-            var base64 = $"data:image/jpeg;base64,{memoryStream.ConvertToBase64()}";
+                result.Save(resultFilePath);
+            }
 
             System.IO.File.Delete(filePath);
 
             return new OkObjectResult(new
             {
-                name = top.Name,
-                confidence = top.Confidence,
-                image = base64,
+                id = id,
             });
         }
 

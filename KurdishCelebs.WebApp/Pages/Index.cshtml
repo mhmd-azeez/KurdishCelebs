@@ -76,10 +76,7 @@
     })
 
     function uploadSuccess(id, data) {
-        console.log('done');
-        let image = document.getElementById('result-image');
-        image.setAttribute('src', data.image);
-        goToState('result');
+        window.location.href = 'result/' + data.id;
     }
 
     function goToState(state) {
