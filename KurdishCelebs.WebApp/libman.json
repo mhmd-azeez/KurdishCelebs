@@ -1,0 +1,31 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "axios@0.19.2",
+      "destination": "wwwroot/lib/axios/"
+    },
+    {
+      "library": "dropzone@5.7.0",
+      "destination": "wwwroot/lib/dropzone/",
+      "files": [
+        "min/dropzone.min.js",
+        "min/dropzone.min.css"
+      ]
+    },
+    {
+      "provider": "unpkg",
+      "library": "dm-file-uploader@1.0.2",
+      "destination": "wwwroot/lib/dm-file-uploader/"
+    },
+    {
+      "provider": "unpkg",
+      "library": "@lottiefiles/lottie-player@latest",
+      "destination": "wwwroot/lib/lottie-player/",
+      "files": [
+        "dist/lottie-player.js"
+      ]
+    }
+  ]
+}

@@ -4,7 +4,113 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="d-flex justify-content-center align-items-center">
+    <div id="upload-container">
+        <div id="drop-area" class="dm-uploader p-5 text-center h-100">
+            <form asp-antiforgery="true" method="post" action="/">
+                <h3 class="mb-5 text-muted">Drag and Drop Files Here</h3>
+                <div class="btn btn-primary btn-block mb-5">
+                    <span>Open the file Browser</span>
+                    <input type="file" title="Click to add Files">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="progress-area" style="display: none;">
+        <lottie-player src="/lottie/18143-discord-nearby-animation.json" background="transparent" speed="1" loop autoplay>
+        </lottie-player>
+        <h1 class="lead text-center">Searching...</h1>
+    </div>
+
+    <div id="result-area" style="display:none">
+        <img id="result-image" class="img-fluid" />
+        <br />
+        <a href="/" class="btn btn-primary mt-3">Again?</a>
+    </div>
 </div>
+
+<script>
+    window.addEventListener('load', function () {
+        console.log('loaded');
+        console.log($('input[name="__RequestVerificationToken"]').val());
+
+        $("#upload-button").click(() => {
+            $("#drop-area").dmUploader("start");
+        });
+
+        $("#cancel-button").click(() => {
+            goToState('drop-file');
+        });
+
+        $("#drop-area").dmUploader({
+            url: '/',
+            extFilter: ["jpg", "jpeg"],
+            //... More settings here...
+            multiple: false,
+            onInit: function () {
+                console.log('Callback: Plugin initialized');
+            },
+            auto: true,
+            onUploadProgress: setProgress,
+            onUploadSuccess: uploadSuccess,
+            onUploadError: (id, xhr, status, errorThrown) => console.log('Error! ' + errorThrown),
+            onNewFile: (id, file) => {
+                console.log(file);
+                const img = this.document.getElementById('uploadPreview');
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    img.setAttribute('src', e.target.result);
+                }
+
+                reader.readAsDataURL(file);
+                goToState('upload-progress');
+            },
+            maxFileSize: 3000000,
+            headers: {
+                'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+            }
+            // ... More callbacks
+        });
+    })
+
+    function uploadSuccess(id, data) {
+        console.log('done');
+        let image = document.getElementById('result-image');
+        image.setAttribute('src', data.image);
+        goToState('result');
+    }
+
+    function goToState(state) {
+        const dropArea = document.getElementById('upload-container');
+        const progressCard = document.getElementById('progress-area');
+        const resultArea = document.getElementById('result-area');
+
+        switch (state) {
+            case 'drop-file':
+                dropArea.style.display = "block";
+                progressCard.style.display = "none";
+                resultArea.style.display = "none";
+                break;
+            case 'upload-progress':
+                dropArea.style.display = "none";
+                progressCard.style.display = "block";
+                resultArea.style.display = "none";
+                break;
+            case 'result':
+                resultArea.style.display = "block";
+                dropArea.style.display = "none";
+                progressCard.style.display = "none";
+            default:
+        }
+    }
+
+    function setProgress(progress) {
+        const progressBar = document.getElementById('progress-bar');
+        console.log('Progress: ' + progress);
+
+        progressBar.setAttribute('aria-valuenow', progress);
+        progressBar.style.width = progress + '%';
+    }
+</script>
