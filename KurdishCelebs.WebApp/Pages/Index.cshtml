@@ -31,6 +31,7 @@
         <img id="result-image" class="img-fluid" />
         <br />
         <a href="/" class="btn btn-primary mt-3">Again?</a>
+        <a id="download-button" href="#" class="btn btn-primary mt-3" download>Download image</a>
     </div>
 </div>
 
@@ -92,7 +93,11 @@
     function uploadSuccess(id, data) {
         console.log('done');
         let image = document.getElementById('result-image');
+        let downloadButton = document.getElementById('download-button');
+
         image.setAttribute('src', data.image);
+        downloadButton.setAttribute('href', data.image);
+
         goToState('result');
     }
 
