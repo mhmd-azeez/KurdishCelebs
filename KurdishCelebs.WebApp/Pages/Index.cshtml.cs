@@ -78,7 +78,7 @@ namespace KurdishCelebs.WebApp.Pages
 
                 const int imageWidth = 500;
 
-                var contentFont = SystemFonts.CreateFont("Arial", 36, FontStyle.Regular);
+                var contentFont = SystemFonts.CreateFont("Arial", 28, FontStyle.Regular);
                 var watermarkFont = SystemFonts.CreateFont("Arial", 26, FontStyle.Bold);
 
                 var textOptions = new TextGraphicsOptions
