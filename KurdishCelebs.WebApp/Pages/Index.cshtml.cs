@@ -17,6 +17,10 @@ using KurdishCelebs.WebApp.Services;
 
 namespace KurdishCelebs.WebApp.Pages
 {
+    public class UploadRequest
+    {
+        public string Image { get; set; }
+    }
     public static class StreamExtensions
     {
         public static string ConvertToBase64(this Stream stream)
@@ -47,15 +51,18 @@ namespace KurdishCelebs.WebApp.Pages
         }
 
 
-        public async Task<IActionResult> OnPost(IFormFile file)
+        public async Task<IActionResult> OnPost([FromBody] UploadRequest request)
         {
             try
             {
                 var filePath = Path.GetTempFileName();
 
+                var image = request.Image.Substring("data:image/jpeg;base64,".Length);
+
+                using (var memStream = new MemoryStream(Convert.FromBase64String(image)))
                 using (var stream = System.IO.File.Create(filePath))
                 {
-                    await file.CopyToAsync(stream);
+                    await memStream.CopyToAsync(stream);
                 }
 
                 var result = _recognitionService.Search(filePath);

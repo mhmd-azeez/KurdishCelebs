@@ -59,9 +59,9 @@
             },
             allowedTypes: 'image/*',
             maxFileSize: maxMegaBytes * 1024 * 1024,
-            auto: true,
+            auto: false,
             onUploadProgress: setProgress,
-            onUploadSuccess: uploadSuccess,
+            onUploadSuccess: uploadComplete,
             onUploadError: function (id, xhr, status, errorThrown) {
                 console.log('Error! ' + errorThrown)
                 showError('Error! ' + errorThrown);
@@ -74,6 +74,7 @@
             },
             onNewFile: function (id, file) {
                 goToState('upload-progress');
+                resizeAndUpload(file);
             },
             onUploadError: function (id, xhr, status, errorThrown) {
                 if (xhr.status == 400) {
@@ -90,15 +91,72 @@
         });
     })
 
-    function uploadSuccess(id, data) {
-        console.log('done');
-        let image = document.getElementById('result-image');
-        let downloadButton = document.getElementById('download-button');
+    function resizeAndUpload(file) {
+        var reader = new FileReader();
+        reader.onloadend = function () {
 
-        image.setAttribute('src', data.image);
-        downloadButton.setAttribute('href', data.image);
+            var tempImg = new Image();
+            tempImg.src = reader.result;
+            tempImg.onload = function () {
 
-        goToState('result');
+                var MAX_WIDTH = 1000;
+                var MAX_HEIGHT = 1000;
+                var tempW = tempImg.width;
+                var tempH = tempImg.height;
+                if (tempW > tempH) {
+                    if (tempW > MAX_WIDTH) {
+                        tempH *= MAX_WIDTH / tempW;
+                        tempW = MAX_WIDTH;
+                    }
+                } else {
+                    if (tempH > MAX_HEIGHT) {
+                        tempW *= MAX_HEIGHT / tempH;
+                        tempH = MAX_HEIGHT;
+                    }
+                }
+
+                var canvas = document.createElement('canvas');
+                canvas.width = tempW;
+                canvas.height = tempH;
+                var ctx = canvas.getContext("2d");
+                ctx.drawImage(this, 0, 0, tempW, tempH);
+
+                fetch('/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    body: JSON.stringify({
+                        image: canvas.toDataURL("image/jpeg")
+                    })
+                }).then(uploadComplete);
+            }
+
+        }
+
+        reader.readAsDataURL(file);
+    }
+
+    function uploadComplete(response) {
+        if (response.ok == false && response.status != 400) {
+            showError('Error: ' + response.status);
+        }
+
+        response.json().then(data => {
+            if (response.ok == false && response.status == 400) {
+                showError(data.message);
+                return;
+            }
+
+            let image = document.getElementById('result-image');
+            let downloadButton = document.getElementById('download-button');
+
+            image.setAttribute('src', data.image);
+            downloadButton.setAttribute('href', data.image);
+
+            goToState('result');
+        });
     }
 
     function hideError() {
