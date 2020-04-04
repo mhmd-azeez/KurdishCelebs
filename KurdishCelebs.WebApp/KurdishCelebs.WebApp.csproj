@@ -8,6 +8,7 @@
   <ItemGroup>
     <PackageReference Include="FaceRecognitionDotNet" Version="1.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.3" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="3.1.3" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0007" />
     <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta0007" />
   </ItemGroup>
@@ -15,6 +16,10 @@
   <ItemGroup>
     <Folder Include="wwwroot\results\" />
   </ItemGroup>
+
+  <ImportGroup>
+  <Import Project="$(NuGetPackageRoot)dlibdotnet.native\$(NativeDependenciesVersion)\build\DlibDotNet.Native.targets" Condition="Exists('$(NuGetPackageRoot)dlibdotnet.native\$(NativeDependenciesVersion)\build\DlibDotNet.Native.targets')" />
+  </ImportGroup>
 
   <ItemGroup>
     <None Update="images\abbassi_kemendi\2252019103646425556_388928131190390_846432530_n.jpg">

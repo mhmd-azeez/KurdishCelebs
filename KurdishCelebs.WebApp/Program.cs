@@ -18,6 +18,10 @@ namespace KurdishCelebs.WebApp
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration(config =>
+                {
+                    config.AddCommandLine(args);
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

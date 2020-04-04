@@ -4,6 +4,10 @@
     ViewData["Title"] = "Home page";
 }
 
+<div class="alert alert-danger" id="error-message-container" style="display:none" role="alert">
+    <span id="error-message"></span>
+</div>
+
 <div class="d-flex justify-content-center align-items-center">
     <div id="upload-container">
         <div id="drop-area" class="dm-uploader p-5 text-center h-100">
@@ -31,43 +35,53 @@
 </div>
 
 <script>
+    const maxMegaBytes = 5;
+
     window.addEventListener('load', function () {
         console.log('loaded');
         console.log($('input[name="__RequestVerificationToken"]').val());
 
-        $("#upload-button").click(() => {
+        $("#upload-button").click(function () {
             $("#drop-area").dmUploader("start");
         });
 
-        $("#cancel-button").click(() => {
+        $("#cancel-button").click(function () {
             goToState('drop-file');
         });
 
         $("#drop-area").dmUploader({
             url: '/',
-            extFilter: ["jpg", "jpeg"],
             //... More settings here...
             multiple: false,
             onInit: function () {
                 console.log('Callback: Plugin initialized');
             },
+            allowedTypes: 'image/*',
+            maxFileSize: maxMegaBytes * 1024 * 1024,
             auto: true,
             onUploadProgress: setProgress,
             onUploadSuccess: uploadSuccess,
-            onUploadError: (id, xhr, status, errorThrown) => console.log('Error! ' + errorThrown),
-            onNewFile: (id, file) => {
-                console.log(file);
-                const img = this.document.getElementById('uploadPreview');
-                var reader = new FileReader();
-
-                reader.onload = function (e) {
-                    img.setAttribute('src', e.target.result);
-                }
-
-                reader.readAsDataURL(file);
+            onUploadError: function (id, xhr, status, errorThrown) {
+                console.log('Error! ' + errorThrown)
+                showError('Error! ' + errorThrown);
+            },
+            onFileTypeError: function () {
+                showError('Please select an image.');
+            },
+            onFileSizeError: function () {
+                showError(`Image is too big. Maximux size is ${maxMegaBytes} MB.`);
+            },
+            onNewFile: function (id, file) {
                 goToState('upload-progress');
             },
-            maxFileSize: 3000000,
+            onUploadError: function (id, xhr, status, errorThrown) {
+                if (xhr.status == 400) {
+                    showError(`Error: ${xhr.responseJSON.message}`);
+                }
+                else {
+                    showError(`Error: ${xhr.status}`);
+                }
+            },
             headers: {
                 'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
             }
@@ -82,10 +96,24 @@
         goToState('result');
     }
 
+    function hideError() {
+        let container = document.getElementById('error-message-container');
+        container.style.display = 'none';
+    }
+
+    function showError(message) {
+        let messageSpan = document.getElementById('error-message');
+        let container = document.getElementById('error-message-container');
+        messageSpan.innerText = message;
+        container.style.display = 'block';
+    }
+
     function goToState(state) {
         const dropArea = document.getElementById('upload-container');
         const progressCard = document.getElementById('progress-area');
         const resultArea = document.getElementById('result-area');
+
+        hideError();
 
         switch (state) {
             case 'drop-file':
@@ -107,10 +135,6 @@
     }
 
     function setProgress(progress) {
-        const progressBar = document.getElementById('progress-bar');
         console.log('Progress: ' + progress);
-
-        progressBar.setAttribute('aria-valuenow', progress);
-        progressBar.style.width = progress + '%';
     }
 </script>

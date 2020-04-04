@@ -7,11 +7,22 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace KurdishCelebs.Shared
 {
+    public class NoFaceFoundException : Exception
+    {
+
+    }
+
     public class Face
     {
         public string FullPath { get; set; }
         public string Name { get; set; }
         public FaceEncoding Encoding { get; set; }
+    }
+
+    public class SearchResult
+    {
+        public Location FaceLocation { get; set; }
+        public List<Result> Matches { get; set; }
     }
 
     public class Result
@@ -30,7 +41,7 @@ namespace KurdishCelebs.Shared
             _faceRecognition = FaceRecognition.Create(modelsFolder);
         }
 
-        public static List<Result> Search(string imagesFolder, string path, List<Face> images = null)
+        public static SearchResult Search(string imagesFolder, string path, List<Face> images = null)
         {
             FaceRecognition.InternalEncoding = System.Text.Encoding.UTF8;
 
@@ -39,19 +50,30 @@ namespace KurdishCelebs.Shared
                 if (images == null)
                     images = DeserializeFaces(imagesFolder).Where(i => i.Name != imagesFolder).ToList();
 
-                var locationsB = _faceRecognition.FaceLocations(imageB);
-                var encodingB = _faceRecognition.FaceEncodings(imageB, locationsB).First();
+                var faceLocations = _faceRecognition.FaceLocations(imageB)
+                        .OrderByDescending(l => (l.Right - l.Left) * (l.Bottom - l.Top));
+                if (faceLocations.Any() == false)
+                    throw new NoFaceFoundException();
 
-                var distances = FaceRecognition.FaceDistances(images.Select(i => i.Encoding), encodingB).ToList();
+                var faceLocation = faceLocations.First();
+                var faceEncoding = _faceRecognition.FaceEncodings(imageB, new[] { faceLocation }).First();
 
-                encodingB.Dispose();
+                var distances = FaceRecognition.FaceDistances(images.Select(i => i.Encoding), faceEncoding).ToList();
 
-                return distances.Select((d, i) => new Result
+                faceEncoding.Dispose();
+
+                var results = distances.Select((d, i) => new Result
                 {
                     Confidence = 1 - d,
                     ImagePath = images[i].FullPath,
                     Name = images[i].Name
                 }).OrderByDescending(i => i.Confidence).ToList();
+
+                return new SearchResult
+                {
+                    FaceLocation = faceLocation,
+                    Matches = results
+                };
             }
         }
 
@@ -80,7 +102,7 @@ namespace KurdishCelebs.Shared
 
             foreach (var file in files)
             {
-                var parts = file.Split('\\');
+                var parts = file.Split(new char[] { '\\', '/' });
                 var dir = parts[parts.Length - 2];
 
                 using (var stream = File.OpenRead(file))
@@ -101,7 +123,7 @@ namespace KurdishCelebs.Shared
 
             foreach (var file in files)
             {
-                var parts = file.Split('\\');
+                var parts = file.Split(new char[] { '\\', '/' });
                 var dir = parts[parts.Length - 2];
                 var fileDirectory = Path.GetDirectoryName(file);
                 var fileName = Path.GetFileName(file);

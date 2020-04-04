@@ -16,7 +16,7 @@ namespace KurdishCelebs.WebApp.Services
             _faces = FaceRecognitionUtils.DeserializeFaces(PathHelper.ImagesFolder()).ToList();
         }
 
-        internal List<Result> Search(string filePath)
+        internal SearchResult Search(string filePath)
         {
             return FaceRecognitionUtils.Search(PathHelper.ImagesFolder(), filePath, _faces);
         }
