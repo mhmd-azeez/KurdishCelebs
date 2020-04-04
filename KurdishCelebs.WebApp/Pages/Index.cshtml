@@ -107,6 +107,8 @@
     }
 
     function showError(message) {
+        goToState('drop-file');
+
         let messageSpan = document.getElementById('error-message');
         let container = document.getElementById('error-message-container');
         messageSpan.innerText = message;
