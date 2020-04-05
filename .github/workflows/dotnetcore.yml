@@ -36,7 +36,19 @@ jobs:
         into: '/home/staging/kurdcelebs'
         # Remove existing file inside FTP destination folder
         cleanupExisting: true
-    
+
+    - name: FTP Deploy
+      uses: SamKirkland/FTP-Deploy-Action@3.0.0
+      with:
+        # Deployment destination server & path. Formatted as protocol://domain.com:port/full/destination/path/
+        ftp-server: ${{ secret.ftp_server_host_and_path }}
+        # FTP account username
+        ftp-username: ${{ secrets.ftp_username }}
+        # FTP account password
+        ftp-password: ${{ secrets.ftp_password }}
+        # The local folder to copy, defaults to root project folder
+        local-dir: './KurdishCelebs.WebApp/bin/x64/Release/netcoreapp3.1'
+
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
       with:
