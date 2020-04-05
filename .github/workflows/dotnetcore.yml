@@ -19,7 +19,7 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
     - name: Publish
-      run: dotnet publish --configuration Release --runtime linux-64
+      run: dotnet publish --no-restore --runtime linux-x64 --configuration Release /p:Platform=x64
       
   deploy:
     runs-on: ubuntu-latest
