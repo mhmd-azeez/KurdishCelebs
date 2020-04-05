@@ -33,7 +33,7 @@ jobs:
         # Path to your build folder (usually ./dist or ./public)
         path: './KurdishCelebs.WebApp/bin/x64/Release/netcoreapp3.1'
         # Where to place the files in your ftp
-        into: ${{ secrets.ftp_path }}
+        into: '/home/staging/kurdcelebs'
         # Remove existing file inside FTP destination folder
         cleanupExisting: true
     
