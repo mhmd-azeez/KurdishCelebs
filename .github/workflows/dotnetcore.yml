@@ -48,6 +48,7 @@ jobs:
         ftp-password: ${{ secrets.ftp_password }}
         # The local folder to copy, defaults to root project folder
         local-dir: './KurdishCelebs.WebApp/bin/x64/Release/netcoreapp3.1'
+        forceSsl: false
 
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
