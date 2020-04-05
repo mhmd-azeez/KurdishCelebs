@@ -19,24 +19,6 @@ jobs:
     - name: Publish
       run: dotnet publish --runtime linux-x64 --configuration Release /p:Platform=x64
 
-    - name: dist-to-ft
-      uses: isthatcentered/dist-to-ftp@v1
-      with:
-        # Ftp user
-        user: ${{ secrets.ftp_username }}
-        # Ftp password
-        password: ${{ secrets.ftp_password }}
-        # FTP port
-        port: 22
-        # FTP host url
-        host: ${{ secrets.ftp_server_host }}
-        # Path to your build folder (usually ./dist or ./public)
-        path: './KurdishCelebs.WebApp/bin/x64/Release/netcoreapp3.1'
-        # Where to place the files in your ftp
-        into: '/home/staging/kurdcelebs'
-        # Remove existing file inside FTP destination folder
-        cleanupExisting: true
-
     - name: FTP Deploy
       uses: SamKirkland/FTP-Deploy-Action@3.0.0
       with:
