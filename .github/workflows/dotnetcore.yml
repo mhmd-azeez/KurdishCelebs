@@ -22,7 +22,7 @@ jobs:
       uses: SamKirkland/FTP-Deploy-Action@3.0.0
       with:
         # Deployment destination server & path. Formatted as protocol://domain.com:port/full/destination/path/
-        ftp-server: 'sftp://${{server_ip}}:21/${{deploy_folder}}'
+        ftp-server: ${{ftp_server_and_path}}
         # FTP account username
         ftp-username: ${{ftp_username}}
         # FTP account password
