@@ -32,4 +32,4 @@ jobs:
         # Artifact name
         name: 'artifact'
         # Directory containing files to upload
-        path: 'KurdishCelebs.WebApp\bin\x64\Release\netcoreapp3.1'
+        path: 'KurdishCelebs.WebApp/bin/x64/Release/netcoreapp3.1'
