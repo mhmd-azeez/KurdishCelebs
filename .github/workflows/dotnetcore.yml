@@ -27,7 +27,7 @@ jobs:
         # Ftp password
         password: ${{ secrets.ftp_password }}
         # FTP port
-        # port: # optional, default is 21
+        port: 22
         # FTP host url
         host: ${{ secrets.ftp_server_host }}
         # Path to your build folder (usually ./dist or ./public)
