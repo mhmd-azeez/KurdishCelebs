@@ -1,0 +1,35 @@
+name: .NET Core
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.101
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+    - name: Publish
+      run: dotnet publish --configuration Release --runtime linux-64
+      
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Upload artifact
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        # Artifact name
+        name: 'artifact'
+        # Directory containing files to upload
+        path: 'KurdishCelebs.WebApp\bin\x64\Release\netcoreapp3.1'
