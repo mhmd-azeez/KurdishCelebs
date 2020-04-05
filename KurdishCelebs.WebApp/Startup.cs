@@ -2,10 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using KurdishCelebs.WebApp.Bots;
 using KurdishCelebs.WebApp.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.Bot.Builder;
+using Microsoft.Bot.Builder.Integration.AspNet.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -26,8 +29,16 @@ namespace KurdishCelebs.WebApp
         {
             services.AddRazorPages().AddRazorRuntimeCompilation();
 
+            services.AddControllers();
+
             services.AddHostedService<EncodingService>();
             services.AddSingleton<FacialRecognitionService>();
+
+            services.AddSingleton<IBotFrameworkHttpAdapter, AdapterWithErrorHandler>();
+           // services.AddTransient<IBot, RecognizeBot>();
+
+            services.AddHttpClient<IBot, RecognizeBot>();
+            services.AddHttpClient();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,12 +59,13 @@ namespace KurdishCelebs.WebApp
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseWebSockets();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
+                endpoints.MapControllers();
             });
         }
     }
