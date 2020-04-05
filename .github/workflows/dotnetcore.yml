@@ -30,8 +30,8 @@ jobs:
         # The local folder to copy
         local_source_dir: 'KurdishCelebs.WebApp/bin/x64/Release/netcoreapp3.1'
         # The remote folder
-        dist_target_dir: ${{ secrets.ftp_server_host }}
-        delete: true 
+        dist_target_dir: ${{ secrets.ftp_path }}
+        delete: true
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
       with:
