@@ -18,20 +18,25 @@ jobs:
         dotnet-version: 3.1.101
     - name: Publish
       run: dotnet publish --runtime linux-x64 --configuration Release /p:Platform=x64
-    - name: Simple FTP deploy
-      uses: kevinpainchaud/simple-ftp-deploy-action@v1
+
+    - name: dist-to-ft
+      uses: isthatcentered/dist-to-ftp@v1
       with:
-        # FTP host
-        ftp_host: ${{ secrets.ftp_server_host }}
-        # FTP username
-        ftp_username: ${{ secrets.ftp_username }}
-        # FTP password
-        ftp_password: ${{ secrets.ftp_password }}
-        # The local folder to copy
-        local_source_dir: 'KurdishCelebs.WebApp/bin/x64/Release/netcoreapp3.1'
-        # The remote folder
-        dist_target_dir: ${{ secrets.ftp_path }}
-        delete: true
+        # Ftp user
+        user: ${{ secrets.ftp_username }}
+        # Ftp password
+        password: ${{ secrets.ftp_password }}
+        # FTP port
+        # port: # optional, default is 21
+        # FTP host url
+        host: ${{ secrets.ftp_server_host }}
+        # Path to your build folder (usually ./dist or ./public)
+        path: './KurdishCelebs.WebApp/bin/x64/Release/netcoreapp3.1'
+        # Where to place the files in your ftp
+        into: ${{ secrets.ftp_path }}
+        # Remove existing file inside FTP destination folder
+        cleanupExisting: true
+    
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
       with:
