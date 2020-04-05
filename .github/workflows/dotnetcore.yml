@@ -19,9 +19,6 @@ jobs:
     - name: Publish
       run: dotnet publish --runtime linux-x64 --configuration Release /p:Platform=x64
       
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
       with:
