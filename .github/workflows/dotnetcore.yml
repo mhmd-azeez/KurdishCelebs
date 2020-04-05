@@ -18,17 +18,20 @@ jobs:
         dotnet-version: 3.1.101
     - name: Publish
       run: dotnet publish --runtime linux-x64 --configuration Release /p:Platform=x64
-    - name: FTP Deploy
-      uses: SamKirkland/FTP-Deploy-Action@3.0.0
+    - name: Simple FTP deploy
+      uses: kevinpainchaud/simple-ftp-deploy-action@v1
       with:
-        # Deployment destination server & path. Formatted as protocol://domain.com:port/full/destination/path/
-        ftp-server: ${{ secrets.ftp_server_and_path }}
-        # FTP account username
-        ftp-username: ${{ secrets.ftp_username }}
-        # FTP account password
-        ftp-password: ${{ secrets.ftp_password }}
-        # The local folder to copy, defaults to root project folder
-        local-dir: 'KurdishCelebs.WebApp/bin/x64/Release/netcoreapp3.1'
+        # FTP host
+        ftp_host: ${{ secrets.ftp_server_host }}
+        # FTP username
+        ftp_username: ${{ secrets.ftp_username }}
+        # FTP password
+        ftp_password: ${{ secrets.ftp_password }}
+        # The local folder to copy
+        local_source_dir: 'KurdishCelebs.WebApp/bin/x64/Release/netcoreapp3.1'
+        # The remote folder
+        dist_target_dir: ${{ secrets.ftp_server_host }}
+        delete: true 
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
       with:
