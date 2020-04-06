@@ -15,7 +15,7 @@ namespace KurdishCelebs.WebApp.Helpers
 
         public static string ModelsFolder()
         {
-            var modelsFolder = Environment.GetEnvironmentVariable("KURDCELEBS_MODELS_DIR", EnvironmentVariableTarget.Machine)
+            var modelsFolder = Environment.GetEnvironmentVariable("KURDCELEBS_MODELS_DIR")
                 ?? Shared.Constants.ModelsFolder;
 
             return Path.Combine(BinPath(), modelsFolder);
@@ -23,10 +23,10 @@ namespace KurdishCelebs.WebApp.Helpers
 
         public static string ImagesFolder()
         {
-            var modelsFolder = Environment.GetEnvironmentVariable("KURDCELEBS_IMAGES_DIR", EnvironmentVariableTarget.Machine)
+            var imagesFolder = Environment.GetEnvironmentVariable("KURDCELEBS_IMAGES_DIR")
                 ?? Shared.Constants.ImagesFolder;
 
-            return Path.Combine(BinPath(), Shared.Constants.ImagesFolder);
+            return Path.Combine(BinPath(), imagesFolder);
         }
     }
 }
