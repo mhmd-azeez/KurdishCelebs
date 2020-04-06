@@ -19,6 +19,11 @@ jobs:
     - name: Publish
       run: dotnet publish --runtime linux-x64 --configuration Release /p:Platform=x64
 
+    - name: Delete models and native libraries
+      run: |
+        chmod +x ./build/cleanup.sh
+        ./build/cleanup.sh
+
     - name: copy file via ssh password
       uses: appleboy/scp-action@master
       with:
@@ -26,7 +31,7 @@ jobs:
         username: ${{ secrets.ftp_username }}
         password: ${{ secrets.ftp_password }}
         port: ${{ secrets.ftp_port }}
-        source: "./KurdishCelebs.WebApp/bin/x64/Release/netcoreapp3.1"
+        source: "KurdishCelebs.WebApp/bin/x64/Release/netcoreapp3.1"
         target: ${{ secrets.ftp_dest_path }}
         rm: true
         
