@@ -30,7 +30,7 @@ jobs:
         ftp-password: ${{ secrets.ftp_password }}
         # The local folder to copy, defaults to root project folder
         local-dir: './KurdishCelebs.WebApp/bin/x64/Release/netcoreapp3.1'
-        known-hosts: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC0alaslmbrd/eBylVZzMDObFIv3C5QmrqKQptiJEfwkAhYs5v3li9hPGebTuyGM2tYwBI2En5pbCmTySzBzwEvYldMTzTYZb++Rk6kpJ8sVWnnn9IbU2nyBwQY9FpbGZmVK8CPV8qiKYLQM+Trwd0WVwpSkn9uZtFhMCIq/Dm9mvMnBRvpRhZh3wJwxbHaqU7kXxL5ajLCbMZwOLFwnTzVjEqFg8PJtE2BeQ+AgYBJ4Fkj1uY4DdJPkgEeRyLA3QcwsgPtZOer+GE8DbO97yu+2v7t4b0D9qQjBjYt45EObgGy6CgeyND8Lz8KHuVZswsbr7/ADsBQ9pl+jI1PaGqn'
+        known-hosts: '45.76.86.65 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC0alaslmbrd/eBylVZzMDObFIv3C5QmrqKQptiJEfwkAhYs5v3li9hPGebTuyGM2tYwBI2En5pbCmTySzBzwEvYldMTzTYZb++Rk6kpJ8sVWnnn9IbU2nyBwQY9FpbGZmVK8CPV8qiKYLQM+Trwd0WVwpSkn9uZtFhMCIq/Dm9mvMnBRvpRhZh3wJwxbHaqU7kXxL5ajLCbMZwOLFwnTzVjEqFg8PJtE2BeQ+AgYBJ4Fkj1uY4DdJPkgEeRyLA3QcwsgPtZOer+GE8DbO97yu+2v7t4b0D9qQjBjYt45EObgGy6CgeyND8Lz8KHuVZswsbr7/ADsBQ9pl+jI1PaGqn'
 
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
