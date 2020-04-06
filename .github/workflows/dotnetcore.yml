@@ -33,7 +33,7 @@ jobs:
         username: ${{ secrets.ftp_username }}
         password: ${{ secrets.ftp_password }}
         port: ${{ secrets.ftp_port }}
-        source: 'KurdishCelebs.WebApp/bin/x64/Release/netcoreapp3.1/linux-x64'
+        source: 'KurdishCelebs.WebApp/bin/x64/Release/netcoreapp3.1/linux-x64/publish'
         target: ${{ secrets.ftp_dest_path }}
         rm: true
         strip_components: 6
@@ -44,5 +44,5 @@ jobs:
         # Artifact name
         name: 'webapp'
         # Directory containing files to upload
-        path: 'KurdishCelebs.WebApp/bin/x64/Release/netcoreapp3.1/linux-x64'
+        path: 'KurdishCelebs.WebApp/bin/x64/Release/netcoreapp3.1/linux-x64/publish'
     
