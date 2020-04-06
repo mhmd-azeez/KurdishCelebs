@@ -19,19 +19,17 @@ jobs:
     - name: Publish
       run: dotnet publish --runtime linux-x64 --configuration Release /p:Platform=x64
 
-    - name: FTP Deploy
-      uses: SamKirkland/FTP-Deploy-Action@3.0.0
+    - name: copy file via ssh password
+      uses: appleboy/scp-action@master
       with:
-        # Deployment destination server & path. Formatted as protocol://domain.com:port/full/destination/path/
-        ftp-server: ${{ secrets.ftp_server_host_and_path }}
-        # FTP account username
-        ftp-username: ${{ secrets.ftp_username }}
-        # FTP account password
-        ftp-password: ${{ secrets.ftp_password }}
-        # The local folder to copy, defaults to root project folder
-        local-dir: './KurdishCelebs.WebApp/bin/x64/Release/netcoreapp3.1'
-        git-ftp-args: --insecure
-
+        host: ${{ secrets.ftp_server_host }}
+        username: ${{ secrets.ftp_username }}
+        password: ${{ secrets.ftp_password }}
+        port: ${{ secrets.ftp_port }}
+        source: "./KurdishCelebs.WebApp/bin/x64/Release/netcoreapp3.1"
+        target: ${{ secrets.ftp_dest_path }}
+        rm: true
+        
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
       with:
