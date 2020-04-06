@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Reflection;
 
 namespace KurdishCelebs.WebApp.Helpers
@@ -14,11 +15,17 @@ namespace KurdishCelebs.WebApp.Helpers
 
         public static string ModelsFolder()
         {
-            return Path.Combine(BinPath(), Shared.Constants.ModelsFolder);
+            var modelsFolder = Environment.GetEnvironmentVariable("KURDCELEBS_MODELS_DIR", EnvironmentVariableTarget.Machine)
+                ?? Shared.Constants.ModelsFolder;
+
+            return Path.Combine(BinPath(), modelsFolder);
         }
 
         public static string ImagesFolder()
         {
+            var modelsFolder = Environment.GetEnvironmentVariable("KURDCELEBS_IMAGES_DIR", EnvironmentVariableTarget.Machine)
+                ?? Shared.Constants.ImagesFolder;
+
             return Path.Combine(BinPath(), Shared.Constants.ImagesFolder);
         }
     }
