@@ -37,6 +37,15 @@ jobs:
         target: ${{ secrets.ftp_dest_path }}
         rm: true
         strip_components: 6
+  
+    - name: Run update script
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.ftp_server_host }}
+        username: ${{ secrets.ftp_username }}
+        password: ${{ secrets.ftp_password }}
+        port: ${{ secrets.ftp_port }}
+        script: ${{ secrets.update_script_path }}
         
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
