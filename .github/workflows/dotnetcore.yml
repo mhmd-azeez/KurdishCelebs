@@ -23,8 +23,8 @@ jobs:
       run: chmod +x ./build/cleanup.sh
         ./build/cleanup.sh
         
-    - name: run cleanup script
-      run: ./build/cleanup.sh
+#    - name: run cleanup script
+#      run: ./build/cleanup.sh
         
     - name: copy file via ssh password
       uses: appleboy/scp-action@master
