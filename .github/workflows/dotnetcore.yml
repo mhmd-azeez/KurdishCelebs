@@ -36,7 +36,7 @@ jobs:
         source: 'KurdishCelebs.WebApp/bin/x64/Release/netcoreapp3.1/linux-x64/publish'
         target: ${{ secrets.ftp_dest_path }}
         rm: true
-        strip_components: 6
+        strip_components: 7
   
     - name: Run update script
       uses: appleboy/ssh-action@master
